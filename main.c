@@ -6,7 +6,7 @@
 /*   By: shebaz <shebaz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/04 13:49:36 by shebaz            #+#    #+#             */
-/*   Updated: 2025/02/05 13:50:14 by shebaz           ###   ########.fr       */
+/*   Updated: 2025/02/05 14:07:36 by shebaz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ char *rm_nline(char *line)
 	if (line)
 	{
 		if (line[ft_strlen(line) - 1] == '\n')
-			return (ft_strncpy(result, line, strlen(line) - 2));
+			return (ft_strncpy(result, line, strlen(line) - 1));
 	}
 	return (line);
 }
@@ -188,26 +188,31 @@ t_data *map_parsing(t_data *data)
 			print_error();
 		else
 		{
-			// printf("line_1 == %s\n", line);
 			tmp = 1;
-			// counter++;
-			height++;
-			if (ft_strlen(line) > weight)
-				weight = strlen(line);
-			while (line[i])
+			weight = strlen(line);
+			while (line)
 			{
-				if (line[i] == 32)
-					i++;
-				if (line[i] == 'N' || line[i] == 'S' ||line[i] == 'E' ||line[i] == 'W')
-					p_counter++;
-				i++;
+				line = get_next_line(fd);
+				if (ft_strlen(line) > weight)
+					weight = strlen(line);
+				printf("line = %s\n", line);	
 			}
+			// height++;
+			// if (ft_strlen(line) > weight)
+			// 	weight = strlen(line);
+			// while (line[i])
+			// {
+			// 	if (line[i] == 32)
+			// 		i++;
+			// 	if (line[i] == 'N' || line[i] == 'S' ||line[i] == 'E' ||line[i] == 'W')
+			// 		p_counter++;
+			// 	i++;
+			// }
 		}
 	}
 	data->map_height = height;
 	data->map_weight = weight;
-	printf("height = %d\n", height);
-	printf("weight = %d\n", weight);
+	print_struct(data);
 	if (!check_data(data) || p_counter > 1 || counter)
 		print_error();
 	return (data);
