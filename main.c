@@ -6,7 +6,7 @@
 /*   By: shebaz <shebaz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/04 13:49:36 by shebaz            #+#    #+#             */
-/*   Updated: 2025/02/06 15:34:02 by shebaz           ###   ########.fr       */
+/*   Updated: 2025/02/07 17:24:05 by shebaz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -185,10 +185,36 @@ void add_back(t_helper **list, char *content)
 	}
 }
 
+void fill_the_array(t_helper *lst, t_data *data)
+{
+	int i;
+	int j;
+
+	i = 0;
+	data->map = malloc((data->map_height + 1) * sizeof(char *));
+	if (!data->map)
+		perror("Allocation Failled");
+	while (i < data->map_height && lst)
+	{
+		j = 0;
+		data->map[i] = malloc((ft_strlen(lst->line) + 1) * sizeof(char));
+		if (!data->map[i])
+			perror("Allocation Failled");
+		while (j < ft_strlen(lst->line) && lst->line[j] != '\n')
+		{
+			data->map[i][j] = lst->line[j];
+			j++;
+		}
+		data->map[i][j] = '\0';
+		lst = lst->next;
+		i++;
+	}
+	data->map[data->map_height] = '\0';
+}
+
 t_data *map_parsing(t_data *data)
 {
 	t_helper	*list;
-	char		**map;
     char		*line;
 	int			fd;
 	int			tmp;
@@ -221,23 +247,13 @@ t_data *map_parsing(t_data *data)
 		else
 		{
 			tmp = 1;
-			add_back(&list , line);
+			add_back(&list , line + i);
 			free(line);
 			k++;
 		}
 	}
 	data->map_height = k;
-	map = malloc((k + 1) * sizeof(char *));
-	i = 0;
-	while (i < k)
-	{
-		map[i] = ft_strdup(list->line);
-		list = list->next;
-		i++;
-	}
-	map[i] = NULL;
-	data->map = map;
-	print_struct(data);
+	fill_the_array(list, data);
 	return (data);
 }
 
@@ -253,6 +269,34 @@ void initiale_data(t_data *data)
 	data->map = NULL;
 }
 
+void clean_data(t_data *data)
+{
+	int i;
+	
+	i = 0;
+	if (data->ceiling_color)
+		free(data->ceiling_color);
+	if (data->Floor_color)
+		free(data->Floor_color);
+	if (data->north_texture)
+		free(data->north_texture);
+	if (data->south_texture)
+		free(data->south_texture);
+	if (data->west_texture)
+		free(data->west_texture);
+	if (data->east_texture)
+		free(data->east_texture);
+	if(data->map)
+	{
+		while (data->map[i])
+		{
+			free(data->map[i]);
+			i++;
+		}
+		free(data->map);
+	}
+	free(data);
+}
 void validate_colors (t_data *data)
 {
 	if (!data->ceiling_color || !data->Floor_color)
@@ -275,6 +319,7 @@ void validate_colors (t_data *data)
 		print_error();
 	}
 }
+
 void validate_paths(t_data *data)
 {
 	if (!data->north_texture || !data->south_texture
@@ -285,18 +330,106 @@ void validate_paths(t_data *data)
 	}
 }
 
-void validate_map()
+void validate_player(t_data *data)
 {
-
+	int p_counter;
+	int i;
+	int j;
+	
+	i = 0;
+	p_counter = 0;;
+	while (data->map[i])
+	{
+		j = 0;
+		while (data->map[i][j])
+		{
+			if (data->map[i][j] == 'N' || data->map[i][j] == 'S'
+				||data->map[i][j] == 'W' ||data->map[i][j] == 'E')
+			{
+				p_counter++;
+				j++;
+			}
+			else if (data->map[i][j] == 32 || data->map[i][j] == '\t')
+				j++;
+			else if (data->map[i][j] != '0' && data->map[i][j] != '1')
+			{
+				p_counter++;
+				j++;
+			}
+			else
+				j++;
+		}
+		i++;
+	}
+	if (p_counter != 1)
+	{
+		clean_data(data);
+		print_error();
+	}
 }
 
-void data_validating(t_data *data)
+void validate_walls(t_data *data)
+{
+	int i;
+	int j;
+
+	i = 0;
+	j = 0;
+	while (data->map[i])
+	{
+		j = 0;
+		while (data->map[i][j])
+		{
+			if ((data->map[0][j] != '1' && data->map[0][j] != ' ')
+				|| (data->map[data->map_height - 1][j] != '1' && data->map[data->map_height - 1][j] != ' ')
+				|| data->map[i][ft_strlen(data->map[i]) - 1] != '1'
+				|| data->map[i][0] != '1')
+			{
+				clean_data(data);
+				print_error();
+			}
+			else
+				j++;
+		}
+		i++;
+	}
+}
+
+void validate_map(t_data *data)
+{
+	if (!data->map)
+	{
+		clean_data(data);
+		print_error();
+	}
+	validate_player(data);
+	validate_walls(data);
+}
+
+void data_validation(t_data *data)
 {
 	validate_colors(data);
 	validate_paths(data);
-	validate_map();
+	validate_map(data);
 }
+void map_updating(char ***map)
+{
+	int i;
+	int j;
 
+	i = 0;
+	while ((*map)[i])
+	{
+		j = 0;
+		while ((*map)[i][j])
+		{
+			if((*map)[i][j] == ' ' || (*map)[i][j] == '\t')
+				((*map)[i][j] = '0');
+			j++;		
+		}
+		i++;
+	}
+}
 int	main()
 {
 	t_data *data;
@@ -304,6 +437,8 @@ int	main()
 	data = malloc(sizeof(t_data));
 	initiale_data(data);
 	data = map_parsing(data);
-	data_validating(data);
+	// print_struct(data);
+	data_validation(data);
+	// map_updating(&data->map);
 	return (1);
 }
