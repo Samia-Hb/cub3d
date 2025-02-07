@@ -6,11 +6,18 @@
 /*   By: shebaz <shebaz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/04 13:49:36 by shebaz            #+#    #+#             */
-/*   Updated: 2025/02/05 14:07:36 by shebaz           ###   ########.fr       */
+/*   Updated: 2025/02/06 15:34:02 by shebaz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 # include "cub3d.h"
+
+typedef struct helper
+{
+	char *line;
+	struct helper *next;
+
+}t_helper;
 
 void print_error()
 {
@@ -70,8 +77,6 @@ t_rgb *apply_colors(char **arr)
 	rgb->r = atoi(arr[0]);
 	rgb->g = atoi(arr[1]);
 	rgb->b = atoi(arr[2]);
-	if (rgb->r > 255 || rgb->r < 0 || rgb->g > 255 || rgb->g < 0 || rgb->b > 255 || rgb->b < 0)
-		print_error();
 	return (rgb);
 }
 
@@ -113,7 +118,7 @@ int	check_data(t_data *data)
 	if (!data)
 		return (0);
 	if (!data->ceiling_color || !data->east_texture || !data->Floor_color
-		|| !data->map_height || !data->map_weight || !data->north_texture
+		|| !data->map_height || !data->north_texture
 		|| !data->south_texture || !data->west_texture)
 		return (0);
 	return (1);
@@ -132,8 +137,12 @@ int	another_content(char *str)
 	}
 	return (1);
 }
+
 void	print_struct(t_data *data)
 {
+	int i;
+
+	i = 0;
 	printf("east = '%s'\n",data->east_texture);
 	printf("north = '%s'\n",data->north_texture);
 	printf("west = '%s'\n",data->west_texture);
@@ -146,32 +155,55 @@ void	print_struct(t_data *data)
 	printf("colors = '%d'\n", data->ceiling_color->r);
 	printf("       = '%d'\n", data->ceiling_color->g);
 	printf("       = '%d'\n", data->ceiling_color->b);
+	printf("--Maap height = %d\n", data->map_height);
+	printf("--Maap--\n");
+	while (data->map[i])
+	{
+		printf("%s\n", data->map[i]);
+		i++;
+	}
+}
+
+void add_back(t_helper **list, char *content)
+{
+	t_helper *node;
+	t_helper *tmp;
+
+	node = malloc(sizeof(t_helper));
+	if (!node)
+		perror("Allocation Failed:");
+	node->line = ft_strdup(content);
+	node->next = NULL;
+	if (!*list)
+		*list = node;
+	else
+	{
+		tmp = *list;
+		while (tmp->next)
+			tmp = tmp->next;
+		tmp->next = node;
+	}
 }
 
 t_data *map_parsing(t_data *data)
 {
-	int		p_counter;
-	int		counter;
-	int		weight;
-	int		height;
-    char	*line;
-	int		fd;
-	int		i;
-	int		tmp;
+	t_helper	*list;
+	char		**map;
+    char		*line;
+	int			fd;
+	int			tmp;
+	int			i;
+	int			k ;
 
 	tmp = 0;
-	weight = 0;
-	height = 0;
-	counter = 0;
-	p_counter = 0;
+	k = 0;
+	list = NULL;
 	fd = open("map.cub", O_RDONLY, 0777);
 	if (fd == -1)
 		print_error();
-	int j = 0;
 	while (1)
     {
 		i = 0;
-		j++;
 		line = get_next_line(fd);
 		if (!line)
 			break ;
@@ -189,32 +221,23 @@ t_data *map_parsing(t_data *data)
 		else
 		{
 			tmp = 1;
-			weight = strlen(line);
-			while (line)
-			{
-				line = get_next_line(fd);
-				if (ft_strlen(line) > weight)
-					weight = strlen(line);
-				printf("line = %s\n", line);	
-			}
-			// height++;
-			// if (ft_strlen(line) > weight)
-			// 	weight = strlen(line);
-			// while (line[i])
-			// {
-			// 	if (line[i] == 32)
-			// 		i++;
-			// 	if (line[i] == 'N' || line[i] == 'S' ||line[i] == 'E' ||line[i] == 'W')
-			// 		p_counter++;
-			// 	i++;
-			// }
+			add_back(&list , line);
+			free(line);
+			k++;
 		}
 	}
-	data->map_height = height;
-	data->map_weight = weight;
+	data->map_height = k;
+	map = malloc((k + 1) * sizeof(char *));
+	i = 0;
+	while (i < k)
+	{
+		map[i] = ft_strdup(list->line);
+		list = list->next;
+		i++;
+	}
+	map[i] = NULL;
+	data->map = map;
 	print_struct(data);
-	if (!check_data(data) || p_counter > 1 || counter)
-		print_error();
 	return (data);
 }
 
@@ -227,7 +250,51 @@ void initiale_data(t_data *data)
 	data->north_texture = NULL;
 	data->south_texture = NULL;
 	data->map_height = 0;
-	data->map_weight = 0;
+	data->map = NULL;
+}
+
+void validate_colors (t_data *data)
+{
+	if (!data->ceiling_color || !data->Floor_color)
+	{
+		clean_data(data);
+		print_error();
+	}
+	if (data->ceiling_color->b > 255 || data->ceiling_color->b < 0
+		|| data->ceiling_color->r > 255 || data->ceiling_color->r < 0
+		|| data->ceiling_color->g > 255 || data->ceiling_color->g < 0)
+	{
+		clean_data(data);
+		print_error();
+	}
+	if (data->Floor_color->b > 255 || data->Floor_color->b < 0
+	|| data->Floor_color->r > 255 || data->Floor_color->r < 0
+	|| data->Floor_color->g > 255 || data->Floor_color->g < 0)
+	{
+		clean_data(data);
+		print_error();
+	}
+}
+void validate_paths(t_data *data)
+{
+	if (!data->north_texture || !data->south_texture
+		|| !data->west_texture || !data->east_texture)
+	{
+		clean_data(data);
+		print_error();
+	}
+}
+
+void validate_map()
+{
+
+}
+
+void data_validating(t_data *data)
+{
+	validate_colors(data);
+	validate_paths(data);
+	validate_map();
 }
 
 int	main()
@@ -237,5 +304,6 @@ int	main()
 	data = malloc(sizeof(t_data));
 	initiale_data(data);
 	data = map_parsing(data);
+	data_validating(data);
 	return (1);
 }

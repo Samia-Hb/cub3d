@@ -3,6 +3,7 @@
 
 # include "get_next_line/get_next_line.h"
 # include "libft/libft.h"
+# include "minilibx-linux/mlx.h"
 # include <math.h>
 # include <unistd.h>
 # include <dirent.h>
@@ -40,10 +41,10 @@ typedef struct data
 	char	*south_texture;
 	char	*west_texture;
 	char	*east_texture;
-	int		map_height;
-	int		map_weight;
 	t_rgb	*ceiling_color;
 	t_rgb	*Floor_color;	
+	int		map_height;
+	char	**map;
 } t_data;
 
 
