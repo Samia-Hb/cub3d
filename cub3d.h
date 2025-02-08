@@ -47,6 +47,12 @@ typedef struct data
 	char	**map;
 } t_data;
 
+typedef struct helper
+{
+	char *line;
+	struct helper *next;
+
+}t_helper;
 
 t_data  *map_parsing(t_data *data);
 int     another_content(char *str);
