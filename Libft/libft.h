@@ -6,7 +6,7 @@
 /*   By: shebaz <shebaz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/08 13:52:23 by shebaz            #+#    #+#             */
-/*   Updated: 2025/02/05 11:18:23 by shebaz           ###   ########.fr       */
+/*   Updated: 2025/02/09 10:57:56 by shebaz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,4 +67,5 @@ t_list	*ft_lstmap(t_list *lst, void *(*f)(void *), void (*del)(void *));
 void	ft_putstring(char *str);
 char	*ft_strdup(char *s1);
 char	*ft_strncpy(char *dest, const char *src, size_t n);
+int		ft_stnrcmp(char *s1, char *s2, size_t n);
 #endif

@@ -6,7 +6,7 @@
 /*   By: shebaz <shebaz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/04 13:49:36 by shebaz            #+#    #+#             */
-/*   Updated: 2025/02/08 23:16:11 by shebaz           ###   ########.fr       */
+/*   Updated: 2025/02/09 13:06:55 by shebaz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,6 +50,17 @@ void	initiale_data(t_data *data)
 	data->map = NULL;
 }
 
+void execution(t_data *data)
+{
+	void *mlx;
+	void *mlx_window;
+
+	(void)data;
+	(void)mlx_window;
+	mlx = mlx_init();
+	mlx_window = mlx_new_window(mlx, 1200, 1000,"Cub3d");
+	mlx_loop(mlx);
+}
 int	main(void)
 {
 	t_data	*data;
@@ -59,6 +70,7 @@ int	main(void)
 	data = map_parsing(data);
 	data_validation(data);
 	map_updating(&data->map, data->map_height);
-	// clean_data(data);
+	execution(data);
+	clean_data(data);
 	return (1);
 }

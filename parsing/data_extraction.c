@@ -6,7 +6,7 @@
 /*   By: shebaz <shebaz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/08 22:08:51 by shebaz            #+#    #+#             */
-/*   Updated: 2025/02/08 23:13:57 by shebaz           ###   ########.fr       */
+/*   Updated: 2025/02/09 12:43:25 by shebaz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,13 +35,13 @@ void	set_texture(t_data *data, char *line)
 	tmp = 00;
 	while (line[i] && line[i] == ' ')
 		i++;
-	if (!strncmp(line + i, "NO", 2))
+	if (!ft_strncmp(line + i, "NO", 2))
 		tmp = 1;
-	else if (!strncmp(line + i, "SO", 2))
+	else if (!ft_strncmp(line + i, "SO", 2))
 		tmp = 2;
-	else if (!strncmp(line + i, "WE", 2))
+	else if (!ft_strncmp(line + i, "WE", 2))
 		tmp = 3;
-	else if (!strncmp(line + i, "EA", 2))
+	else if (!ft_strncmp(line + i, "EA", 2))
 		tmp = 4;
 	if (!tmp)
 		print_error();
@@ -57,16 +57,21 @@ void	set_texture(t_data *data, char *line)
 	ft_free(splited);
 }
 
-t_rgb	*apply_colors(char **arr)
+t_rgb	*apply_colors(t_data *data, char **arr)
 {
 	t_rgb	*rgb;
 
+	if (!arr[0] || !arr[1] || !arr[2])
+	{
+		clean_data(data);
+		print_error();
+	}
 	rgb = malloc(sizeof(t_rgb));
 	if (!rgb)
 		perror("Error :");
 	rgb->r = atoi(arr[0]);
 	rgb->g = atoi(arr[1]);
-	rgb->b = atoi(arr[2]);
+	rgb->b = atoi(arr[2]);		
 	return (rgb);
 }
 
@@ -78,18 +83,20 @@ void	set_colors(t_data *data, char *line)
 
 	i = 0;
 	tmp = 0;
-	if (!strncmp("F", line, 1))
+	if (!ft_strncmp("F", line, 1))
 		tmp = 1;
-	else if (!strncmp("C", line, 1))
+	else if (!ft_strncmp("C", line, 1))
 		tmp = 2;
 	i++;
 	while (line[i] && line[i] == ' ')
 		i++;
 	splited = ft_split(line + i, ',');
+	if (!splited)
+		perror("Allocation Failled");
 	if (tmp == 1)
-		data->floor_color = apply_colors(splited);
+		data->floor_color = apply_colors(data, splited);
 	else if (tmp == 2)
-		data->ceiling_color = apply_colors(splited);
+		data->ceiling_color = apply_colors(data, splited);
 	ft_free(splited);
 }
 
@@ -116,11 +123,11 @@ t_data	*map_parsing(t_data *data)
 			break ;
 		while (line[i] && line[i] == ' ')
 			i++;
-		if (!strncmp(line + i, "NO", 2) || !strncmp(line + i, "WE", 2)
-			|| !strncmp(line + i, "SO", 2) || !strncmp(line + i, "EA", 2))
+		if (!ft_strncmp(line + i, "NO", 2) || !ft_strncmp(line + i, "WE", 2)
+			|| !ft_strncmp(line + i, "SO", 2) || !ft_strncmp(line + i, "EA", 2))
 			set_texture(data, line + i);
-		else if (!strncmp("F", line + i, 1) || !strncmp("C", line + i, 1))
-			set_colors(data, line + i);
+		else if (!ft_strncmp("F", line + i, 1) || !ft_strncmp("C", line + i, 1))
+				set_colors(data, line + i);
 		else if (is_empty_line(line) && !tmp)
 		{
 			free(line);

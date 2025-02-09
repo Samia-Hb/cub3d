@@ -6,7 +6,7 @@
 /*   By: shebaz <shebaz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/08 23:12:50 by shebaz            #+#    #+#             */
-/*   Updated: 2025/02/09 09:39:59 by shebaz           ###   ########.fr       */
+/*   Updated: 2025/02/09 12:01:52 by shebaz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,7 +72,7 @@ void				initiale_data(t_data *data);
 int					check_data(t_data *data);
 int					is_empty_line(char *line);
 void				set_colors(t_data *data, char *line);
-t_rgb				*apply_colors(char **arr);
+t_rgb				*apply_colors(t_data *data, char **arr);
 void				set_texture(t_data *data, char *line);
 void				map_updating(char ***map, int height);
 void				data_validation(t_data *data);
