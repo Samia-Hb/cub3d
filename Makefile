@@ -6,7 +6,7 @@
 #    By: shebaz <shebaz@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/02/04 09:56:03 by shebaz            #+#    #+#              #
-#    Updated: 2025/02/08 23:16:28 by shebaz           ###   ########.fr        #
+#    Updated: 2025/02/09 09:39:03 by shebaz           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -18,7 +18,7 @@ CFLAGS = -Wall -Wextra -Werror
 
 SRCS =	main.c \
 		$(wildcard get_next_line/*.c) \
-		$(wildcard libft/*.c) \
+		$(wildcard Libft/*.c) \
 		$(wildcard parsing/*.c) \
 
 OBJS = $(SRCS:.c=.o)

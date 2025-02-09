@@ -6,7 +6,7 @@
 /*   By: shebaz <shebaz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/08 23:12:50 by shebaz            #+#    #+#             */
-/*   Updated: 2025/02/08 23:13:30 by shebaz           ###   ########.fr       */
+/*   Updated: 2025/02/09 09:39:59 by shebaz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,8 @@
 # define CUB3D_H
 
 # include "get_next_line/get_next_line.h"
-# include "libft/libft.h"
-# include "minilibx-linux/mlx.h"
+# include "Libft/libft.h"
+# include "Minilibx-linux/mlx.h"
 # include <dirent.h>
 # include <fcntl.h>
 # include <limits.h>
