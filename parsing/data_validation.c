@@ -6,7 +6,7 @@
 /*   By: shebaz <shebaz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/08 22:07:20 by shebaz            #+#    #+#             */
-/*   Updated: 2025/02/08 23:14:23 by shebaz           ###   ########.fr       */
+/*   Updated: 2025/02/10 15:57:23 by shebaz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,6 +62,9 @@ void	validate_player(t_data *data)
 			if (data->map[i][j] == 'N' || data->map[i][j] == 'S'
 				|| data->map[i][j] == 'W' || data->map[i][j] == 'E')
 			{
+				data->p_pos_x = i;
+				data->p_pos_y = j;
+				data->p_orientation = data->map[i][j];
 				p_counter++;
 				j++;
 			}

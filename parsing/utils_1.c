@@ -6,12 +6,11 @@
 /*   By: shebaz <shebaz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/08 22:11:50 by shebaz            #+#    #+#             */
-/*   Updated: 2025/02/08 23:06:57 by shebaz           ###   ########.fr       */
+/*   Updated: 2025/02/16 14:20:58 by shebaz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../cub3d.h"
-
 
 void	add_back(t_helper **list, char *content)
 {
