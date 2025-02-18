@@ -6,7 +6,7 @@
 /*   By: shebaz <shebaz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/08 23:12:50 by shebaz            #+#    #+#             */
-/*   Updated: 2025/02/18 01:21:09 by shebaz           ###   ########.fr       */
+/*   Updated: 2025/02/18 17:16:56 by shebaz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,8 +38,11 @@
 # define S 83
 # define D 68
 
-# define Window_width 800
-# define Window_height 800
+# define Window_width 1920
+# define Window_height 1080
+
+// # define cell_width 64
+// # define cell_height 64
 
 typedef struct rgb
 {

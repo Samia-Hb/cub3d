@@ -6,7 +6,7 @@
 /*   By: shebaz <shebaz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/17 14:24:06 by shebaz            #+#    #+#             */
-/*   Updated: 2025/02/18 01:33:36 by shebaz           ###   ########.fr       */
+/*   Updated: 2025/02/18 17:16:48 by shebaz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -141,40 +141,57 @@ void go_left(t_data *data)
     }
 }
 
-void go_right(t_data *data)
-{
-    if (data->player.position_y >= (data->p_pos_y * data->window->cell_width) && data->map[data->p_pos_x][data->p_pos_y + 1] != '1')
-    {
-        data->map[data->p_pos_x][data->p_pos_y] = '0';
-        data->map[data->p_pos_x][data->p_pos_y + 1] = data->p_orientation;
-        data->p_pos_y += 1;
-    }
-    if ((data->player.position_y >= (data->p_pos_y * data->window->cell_width) && data->map[data->p_pos_x][data->p_pos_y + 1] != '1') || (data->player.position_y > (data->p_pos_y * data->window->cell_width)))
-    {
-        draw_grid('0', data->p_pos_x, data->p_pos_y, data);
-        data->player.position_y += speed;
-        data->player.position_x += 0;
-    }
-}
+// void go_right(t_data *data)
+// {
+//     if (data->player.position_y >= (data->p_pos_y * data->window->cell_width) && data->map[data->p_pos_x][data->p_pos_y + 1] != '1')
+//     {
+//         data->map[data->p_pos_x][data->p_pos_y] = '0';
+//         data->map[data->p_pos_x][data->p_pos_y + 1] = data->p_orientation;
+//         data->p_pos_y += 1;
+//     }
+//     if ((data->player.position_y >= (data->p_pos_y * data->window->cell_width) && data->map[data->p_pos_x][data->p_pos_y + 1] != '1') || (data->player.position_y > (data->p_pos_y * data->window->cell_width)))
+//     {
+//         draw_grid('0', data->p_pos_x, data->p_pos_y, data);
+//         data->player.position_y += speed;
+//         data->player.position_x += 0;
+//     }
+// }
+#define WHITE 0xFFFFFF  // Hexadecimal(R=255, G=255, B=255)
 
 void go_down(t_data *data)
-{
-    // printf("P_P_POS ==== %d\n", data->player.position_x);
-    // printf("compare ==== %d\n", (data->p_pos_x * data->window->cell_height + data->window->cell_height));
-    // printf("value ===== %c\n ", data->map[data->p_pos_x + 1][data->p_pos_y]);
-    if ((data->player.position_x >= (data->p_pos_x * data->window->cell_height) && data->map[data->p_pos_x + 1][data->p_pos_y] != '1') || (data->player.position_x < (data->p_pos_x * data->window->cell_height)))
+{    
+    if (data->player.position_x < ((data->p_pos_x * data->window->cell_height) + data->window->cell_height))
     {
-        printf("check up here 2\n");
-        draw_grid('0', data->p_pos_x, data->p_pos_y, data);
-        data->player.position_x += 1;
-        data->player.position_y += 0;
+        if (get_pixel_color(data, data->player.position_x + (data->player.height), data->player.position_y) == WHITE)
+        {            
+            draw_grid('0', data->p_pos_x, data->p_pos_y, data);
+            data->player.position_x += speed;
+            data->player.position_y += 0;   
+        }
     }
-    if (data->map[data->p_pos_x + 1][data->p_pos_y] != '1')
+    else
     {
-        printf("check up here 1\n");
-        data->map[data->p_pos_x][data->p_pos_y] = '0';
-        data->map[data->p_pos_x + 1][data->p_pos_y] = data->p_orientation;
-        data->p_pos_x += 1;
+        
+    }
+}
+void go_right(t_data *data)
+{    
+    printf("P_P_POS ==== %d\n", data->player.position_y);
+    printf("compare ==== %d\n", (data->p_pos_y * data->window->cell_width) + (data->window->cell_width));
+    // printf("c ===== %c\n", data->map[data->p_pos_x + 1][data->p_pos_y]);
+    if (data->player.position_y < ((data->p_pos_y * data->window->cell_width) + data->window->cell_width))
+    {
+        // printf("color ==== %d\n", get_pixel_color(data, data->player.position_x + 1, data->player.position_y));
+        if (get_pixel_color(data, data->player.position_x, data->player.position_y + (data->player.width)) == WHITE)
+        {            
+            draw_grid('0', data->p_pos_x, data->p_pos_y, data);
+            data->player.position_y += speed;
+            data->player.position_x += 0;   
+        }
+        // else
+        // {
+                
+        // }
     }
 }
 
@@ -223,3 +240,20 @@ int handle_key(int keycode, t_data *data)
     // printf("result of counting ==== %d\n", (data->p_pos_x * data->window->cell_height));
     // printf("color ===== %d\n", get_pixel_color(data, data->player.position_x - data->player.width , data->player.position_y));
     // printf("player color ===== %d\n", get_pixel_color(data, data->player.position_x, data->player.position_y));
+//check up 2
+    // printf("value ===== %c\n ", data->map[data->p_pos_x + 1][data->p_pos_y]);
+    // if (data->player.position_x >= (data->p_pos_x * data->window->cell_height))
+    // {
+    //     if (data->map[data->p_pos_x + 1][data->p_pos_y] !=)
+    //     printf("check up here 2\n");
+    //     draw_grid('0', data->p_pos_x, data->p_pos_y, data);
+    //     data->player.position_x += 1;
+    //     data->player.position_y += 0;
+    // }
+    // if (data->map[data->p_pos_x + 1][data->p_pos_y] != '1')
+    // {
+    //     printf("check up here 1\n");
+    //     data->map[data->p_pos_x][data->p_pos_y] = '0';
+    //     data->map[data->p_pos_x + 1][data->p_pos_y] = data->p_orientation;
+    //     data->p_pos_x += 1;
+    // }
