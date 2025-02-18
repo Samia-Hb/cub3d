@@ -6,7 +6,7 @@
 /*   By: shebaz <shebaz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/08 23:12:50 by shebaz            #+#    #+#             */
-/*   Updated: 2025/02/18 17:16:56 by shebaz           ###   ########.fr       */
+/*   Updated: 2025/02/18 21:29:45 by shebaz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,8 +41,9 @@
 # define Window_width 1920
 # define Window_height 1080
 
-// # define cell_width 64
-// # define cell_height 64
+# define cell_width 64
+# define cell_height 64
+# define speed 5
 
 typedef struct rgb
 {
@@ -68,8 +69,8 @@ typedef struct window
 	void    		*img_ptr;
 	void			*mlx_ptr;
 	void 			*mlx_window;
-	int				cell_width;
-	int				cell_height;
+	// int				cell_width;
+	// int				cell_height;
 }t_window;
 
 typedef struct data

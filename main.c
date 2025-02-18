@@ -6,7 +6,7 @@
 /*   By: shebaz <shebaz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/04 13:49:36 by shebaz            #+#    #+#             */
-/*   Updated: 2025/02/17 21:46:16 by shebaz           ###   ########.fr       */
+/*   Updated: 2025/02/18 17:56:34 by shebaz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,11 +106,6 @@ void my_mlx_pixel_put(t_data *data, int x, int y, int color)
 
 void draw_player(int i, int j, t_data *data)
 {
-    int cell_width;
-    int cell_height;
-
-    cell_width = Window_width / data->map_width;
-    cell_height = Window_height / data->map_height;
 	if (data->player.position_x == -1  && data->player.position_y == -1)
     {
         data->player.position_x = i * cell_height + cell_height / 2;
@@ -138,7 +133,7 @@ void draw_grid(char c, int i, int j, t_data *data)
     size_t	color;
     int		x;
 	int 	y;
-	
+
     if (c == '0')
 		color = 0xFFFFFF;
     else if (c == '1')
@@ -151,11 +146,11 @@ void draw_grid(char c, int i, int j, t_data *data)
 		draw_player(i, j, data);
 	else
 	{
-		y = i * data->window->cell_height;
-		while (y < (i + 1) * data->window->cell_height && y < Window_height)
+		y = i * cell_height;
+		while (y < (i + 1) * cell_height && y < Window_height)
 		{
-			x = j * data->window->cell_width;
-			while (x < (j + 1) * data->window->cell_width && x < Window_width)
+			x = j * cell_width;
+			while (x < (j + 1) * cell_width && x < Window_width)
 			{
 				my_mlx_pixel_put(data, x, y, color);
 				x++;
@@ -222,7 +217,7 @@ void draw_map(t_data *data)
 
 // void go_right(t_data *data)
 // {
-// 	// if (data->player.position_y >= data->window->cell_width)
+// 	// if (data->player.position_y >= cell_width)
 // 	// {
 // 	// 	data->map[data->p_pos_x][data->p_pos_y] = '0';
 // 	// 	data->map[data->p_pos_x - 1][data->p_pos_y] = data->p_orientation;
@@ -255,7 +250,7 @@ void draw_map(t_data *data)
 // {
 // 	printf("Player map position before move: p_pos_x = %d, p_pos_y = %d\n", data->p_pos_x, data->p_pos_y);
 // 	printf("Player Pixel position before move: p_pos_x = %d, p_pos_y = %d\n", data->player.position_x, data->player.position_y);
-// 	if (data->player.position_y >= (data->p_pos_x * data->window->cell_height + data->window->cell_height))
+// 	if (data->player.position_y >= (data->p_pos_x * cell_height + cell_height))
 // 	{
 // 		data->map[data->p_pos_x][data->p_pos_y] = '0';
 // 		data->map[data->p_pos_x + 1][data->p_pos_y] = data->p_orientation;
@@ -273,8 +268,6 @@ void draw_map(t_data *data)
 void execution(t_data *data)
 {
 	data->map_width = find_max_row_length(data);
-	data->window->cell_height = Window_height / data->map_height;
-	data->window->cell_width = Window_width / data->map_width;
     data->window->mlx_ptr = mlx_init();
     data->window->mlx_window = mlx_new_window(data->window->mlx_ptr, Window_width, Window_height, "Cub3d");
 	data->window->img_ptr = mlx_new_image(data->window->mlx_ptr, Window_width, Window_height);
