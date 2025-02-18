@@ -6,7 +6,7 @@
 /*   By: shebaz <shebaz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/08 22:11:50 by shebaz            #+#    #+#             */
-/*   Updated: 2025/02/16 14:20:58 by shebaz           ###   ########.fr       */
+/*   Updated: 2025/02/17 21:47:17 by shebaz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,5 +57,5 @@ void	fill_the_array(t_helper *lst, t_data *data)
 		lst = lst->next;
 		i++;
 	}
-	data->map[data->map_height] = '\0';
+	data->map[data->map_height] = NULL;
 }

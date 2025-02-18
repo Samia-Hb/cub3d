@@ -6,12 +6,12 @@
 /*   By: shebaz <shebaz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/17 14:24:06 by shebaz            #+#    #+#             */
-/*   Updated: 2025/02/17 17:54:01 by shebaz           ###   ########.fr       */
+/*   Updated: 2025/02/18 01:33:36 by shebaz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3d.h"
-
+#define speed 5
 void update_player_pos(int x, int y, t_data *data)
 {
 	int i;
@@ -31,101 +31,151 @@ void update_player_pos(int x, int y, t_data *data)
 	data->player.position_x = x;
 	data->player.position_y = y;
 }
+int check_wall(int x, int y, t_data *data, int tmp)
+{
+    // tmp == 1 mean I trait( up and left)
+    if (tmp == 1)
+    {
+        printf("x ==== %d\n", x);
+        printf("compara === %d\n", data->p_pos_x * data->window->cell_height);
+        printf("y ==== %d\n", y);
+        printf("compara === %d\n", data->p_pos_y * data->window->cell_width);
+        // printf("cell_width == %d\n", data->window->cell_width);
+        // printf("cell_width_original == %d\n", Window_width / data->map_width);
+        if (x <= (data->p_pos_x * data->window->cell_height))
+        {
+            // printf("check up hereeeeeeeeeeeeeeeeeeeee\n");
+            if (data->map[data->p_pos_x - 1][data->p_pos_y] == '1' || data->map[data->p_pos_x - 1][data->p_pos_y - 1] == '1')
+                return (0);
+        }
+    }
+    // tmp == 1 mean I trait ( down and right)
+    if (tmp == 0)
+    {
+        if (x > data->p_pos_x * data->window->cell_height  + data->window->cell_height|| y > data->p_pos_y * data->window->cell_width + data->window->cell_width)
+        {
+            if (data->map[data->p_pos_x + 1][data->p_pos_y] == '1' || data->map[data->p_pos_x + 1][data->p_pos_y - 1] == '1')
+                return (0);
+        }
+    }
+    return (1);
+}
+
+// void go_right(t_data *data)
+// {
+// 	printf("Player map position before move: p_pos_x = %d, p_pos_y = %d\n", data->p_pos_x, data->p_pos_y);
+// 	printf("Player Pixel position before move: p_pos_x = %d, p_pos_y = %d\n", data->player.position_x, data->player.position_y);
+//     if (data->player.position_y < Window_width && data->player.position_y >= ((data->p_pos_y * data->window->cell_width) + data->window->cell_width) && data->map[data->p_pos_x][data->p_pos_y + 1] != '1')
+//     {
+//         printf(">>>>>>>>>>>>>>>>>>>check up here<<<<<<<<<<<<<<<<<<<<\n");
+//         data->map[data->p_pos_x][data->p_pos_y] = '0';
+//         data->map[data->p_pos_x][data->p_pos_y + 1] = data->p_orientation;
+//         data->p_pos_y += 1;
+//     }
+//     if (get_pixel_color(data, data->player.position_x, data->player.position_y + data->player.width) != 0x00008B)
+//     {
+//         printf(">>>>>>>>>>>>>>>>>>>check up here 2<<<<<<<<<<<<<<<<<<<<\n");
+//         draw_grid('0', data->p_pos_x, data->p_pos_y, data);
+//         data->player.position_y += 1;
+//         data->player.position_x += 0;
+//         // update_player_pos(data->player.position_x - 1, data->player.position_y, data);
+//     }
+//     printf("----------------------------------------------------\n");
+//     printf("Player map position After move: p_pos_x = %d, p_pos_y = %d\n", data->p_pos_x, data->p_pos_y);
+//     printf("Player Pixel position After move: p_pos_x = %d, p_pos_y = %d\n", data->player.position_x, data->player.position_y);
+// }
+
+// void go_down(t_data *data)
+// {
+// 	// printf("Player map position before move: p_pos_x = %d, p_pos_y = %d\n", data->p_pos_x, data->p_pos_y);
+// 	// printf("Player Pixel position before move: p_pos_x = %d, p_pos_y = %d\n", data->player.position_x, data->player.position_y);
+//     if (data->player.position_x < Window_height && data->player.position_x >= (data->p_pos_x * data->window->cell_height + data->window->cell_height) && data->map[data->p_pos_x + 1][data->p_pos_y] != '1')
+//     {
+//         printf(">>>>>>>>>>>>>>>>>>>check up here<<<<<<<<<<<<<<<<<<<<\n");
+//         data->map[data->p_pos_x][data->p_pos_y] = '0';
+//         data->map[data->p_pos_x + 1][data->p_pos_y] = data->p_orientation;
+//         data->p_pos_x += 1;
+//     }
+//     if (get_pixel_color(data, data->player.position_x + data->player.height, data->player.position_y) != 0x00008B)
+//     {
+//         printf(">>>>>>>>>>>>>>>>>>>check up here 2<<<<<<<<<<<<<<<<<<<<\n");
+//         draw_grid('0', data->p_pos_x, data->p_pos_y, data);
+//         data->player.position_x += 1;
+//         data->player.position_y += 0;
+//         // update_player_pos(data->player.position_x - 1, data->player.position_y, data);
+//     }
+//     printf("----------------------------------------------------\n");
+//     printf("Player map position After move: p_pos_x = %d, p_pos_y = %d\n", data->p_pos_x, data->p_pos_y);
+//     printf("Player Pixel position After move: p_pos_x = %d, p_pos_y = %d\n", data->player.position_x, data->player.position_y);
+// }
 
 void go_up(t_data *data)
 {
-	printf("Player map position before move: p_pos_x = %d, p_pos_y = %d\n", data->p_pos_x, data->p_pos_y);
-	printf("Player Pixel position before move: p_pos_x = %d, p_pos_y = %d\n", data->player.position_x, data->player.position_y);
-    if (data->player.position_x > 0 && data->player.position_x <= (data->p_pos_x * data->window->cell_height) && data->map[data->p_pos_x - 1][data->p_pos_y] != '1')
+    if (data->player.position_x <= (data->p_pos_x * data->window->cell_height) && data->map[data->p_pos_x - 1][data->p_pos_y] != '1')
     {
-        printf(">>>>>>>>>>>>>>>>>>>check up here<<<<<<<<<<<<<<<<<<<<\n");
         data->map[data->p_pos_x][data->p_pos_y] = '0';
         data->map[data->p_pos_x - 1][data->p_pos_y] = data->p_orientation;
         data->p_pos_x -= 1;
     }
-    if (get_pixel_color(data, data->player.position_x - 1, data->player.position_y) != 0x00008B)
+    if ((data->player.position_x <= (data->p_pos_x * data->window->cell_height) && data->map[data->p_pos_x - 1][data->p_pos_y] != '1') || (data->player.position_x > (data->p_pos_x * data->window->cell_height)))
     {
-        printf(">>>>>>>>>>>>>>>>>>>check up here 2<<<<<<<<<<<<<<<<<<<<\n");
         draw_grid('0', data->p_pos_x, data->p_pos_y, data);
-        data->player.position_x -= 1;
+        data->player.position_x -= speed;
         data->player.position_y += 0;
-        // update_player_pos(data->player.position_x - 1, data->player.position_y, data);
     }
-    printf("----------------------------------------------------\n");
-    printf("Player map position After move: p_pos_x = %d, p_pos_y = %d\n", data->p_pos_x, data->p_pos_y);
-    printf("Player Pixel position After move: p_pos_x = %d, p_pos_y = %d\n", data->player.position_x, data->player.position_y);
 }
 
 void go_left(t_data *data)
 {
-	// printf("Player map position before move: p_pos_x = %d, p_pos_y = %d\n", data->p_pos_x, data->p_pos_y);
-	// printf("Player Pixel position before move: p_pos_x = %d, p_pos_y = %d\n", data->player.position_x, data->player.position_y);
-    if (data->player.position_y > 0 && data->player.position_y <= (data->p_pos_y* data->window->cell_width) && data->map[data->p_pos_x][data->p_pos_y - 1] != '1')
+    if (data->player.position_y <= (data->p_pos_y * data->window->cell_width) && data->map[data->p_pos_x][data->p_pos_y - 1] != '1')
     {
-        // printf(">>>>>>>>>>>>>>>>>>>check up here<<<<<<<<<<<<<<<<<<<<\n");
         data->map[data->p_pos_x][data->p_pos_y] = '0';
         data->map[data->p_pos_x][data->p_pos_y - 1] = data->p_orientation;
         data->p_pos_y -= 1;
     }
-    if (get_pixel_color(data, data->player.position_x, data->player.position_y - 1) != 0x00008B)
+    if ((data->player.position_y <= (data->p_pos_y * data->window->cell_width) && data->map[data->p_pos_x][data->p_pos_y - 1] != '1') || (data->player.position_y > (data->p_pos_y * data->window->cell_width)))
     {
-        // printf(">>>>>>>>>>>>>>>>>>>check up here 2<<<<<<<<<<<<<<<<<<<<\n");
         draw_grid('0', data->p_pos_x, data->p_pos_y, data);
-        data->player.position_y -= 1;
+        data->player.position_y -= speed;
         data->player.position_x += 0;
-        // update_player_pos(data->player.position_x - 1, data->player.position_y, data);
     }
-    // printf("----------------------------------------------------\n");
-    // printf("Player map position After move: p_pos_x = %d, p_pos_y = %d\n", data->p_pos_x, data->p_pos_y);
-    // printf("Player Pixel position After move: p_pos_x = %d, p_pos_y = %d\n", data->player.position_x, data->player.position_y);
 }
 
 void go_right(t_data *data)
 {
-	printf("Player map position before move: p_pos_x = %d, p_pos_y = %d\n", data->p_pos_x, data->p_pos_y);
-	printf("Player Pixel position before move: p_pos_x = %d, p_pos_y = %d\n", data->player.position_x, data->player.position_y);
-    if (data->player.position_y < Window_width && data->player.position_y >= ((data->p_pos_y * data->window->cell_width) + data->window->cell_width) && data->map[data->p_pos_x][data->p_pos_y + 1] != '1')
+    if (data->player.position_y >= (data->p_pos_y * data->window->cell_width) && data->map[data->p_pos_x][data->p_pos_y + 1] != '1')
     {
-        printf(">>>>>>>>>>>>>>>>>>>check up here<<<<<<<<<<<<<<<<<<<<\n");
         data->map[data->p_pos_x][data->p_pos_y] = '0';
         data->map[data->p_pos_x][data->p_pos_y + 1] = data->p_orientation;
         data->p_pos_y += 1;
     }
-    if (get_pixel_color(data, data->player.position_x, data->player.position_y + data->player.width) != 0x00008B)
+    if ((data->player.position_y >= (data->p_pos_y * data->window->cell_width) && data->map[data->p_pos_x][data->p_pos_y + 1] != '1') || (data->player.position_y > (data->p_pos_y * data->window->cell_width)))
     {
-        printf(">>>>>>>>>>>>>>>>>>>check up here 2<<<<<<<<<<<<<<<<<<<<\n");
         draw_grid('0', data->p_pos_x, data->p_pos_y, data);
-        data->player.position_y += 1;
+        data->player.position_y += speed;
         data->player.position_x += 0;
-        // update_player_pos(data->player.position_x - 1, data->player.position_y, data);
     }
-    printf("----------------------------------------------------\n");
-    printf("Player map position After move: p_pos_x = %d, p_pos_y = %d\n", data->p_pos_x, data->p_pos_y);
-    printf("Player Pixel position After move: p_pos_x = %d, p_pos_y = %d\n", data->player.position_x, data->player.position_y);
 }
 
 void go_down(t_data *data)
 {
-	// printf("Player map position before move: p_pos_x = %d, p_pos_y = %d\n", data->p_pos_x, data->p_pos_y);
-	// printf("Player Pixel position before move: p_pos_x = %d, p_pos_y = %d\n", data->player.position_x, data->player.position_y);
-    if (data->player.position_x < Window_height && data->player.position_x >= (data->p_pos_x * data->window->cell_height + data->window->cell_height) && data->map[data->p_pos_x + 1][data->p_pos_y] != '1')
+    // printf("P_P_POS ==== %d\n", data->player.position_x);
+    // printf("compare ==== %d\n", (data->p_pos_x * data->window->cell_height + data->window->cell_height));
+    // printf("value ===== %c\n ", data->map[data->p_pos_x + 1][data->p_pos_y]);
+    if ((data->player.position_x >= (data->p_pos_x * data->window->cell_height) && data->map[data->p_pos_x + 1][data->p_pos_y] != '1') || (data->player.position_x < (data->p_pos_x * data->window->cell_height)))
     {
-        printf(">>>>>>>>>>>>>>>>>>>check up here<<<<<<<<<<<<<<<<<<<<\n");
+        printf("check up here 2\n");
+        draw_grid('0', data->p_pos_x, data->p_pos_y, data);
+        data->player.position_x += 1;
+        data->player.position_y += 0;
+    }
+    if (data->map[data->p_pos_x + 1][data->p_pos_y] != '1')
+    {
+        printf("check up here 1\n");
         data->map[data->p_pos_x][data->p_pos_y] = '0';
         data->map[data->p_pos_x + 1][data->p_pos_y] = data->p_orientation;
         data->p_pos_x += 1;
     }
-    if (get_pixel_color(data, data->player.position_x + data->player.height, data->player.position_y) != 0x00008B)
-    {
-        printf(">>>>>>>>>>>>>>>>>>>check up here 2<<<<<<<<<<<<<<<<<<<<\n");
-        draw_grid('0', data->p_pos_x, data->p_pos_y, data);
-        data->player.position_x += 1;
-        data->player.position_y += 0;
-        // update_player_pos(data->player.position_x - 1, data->player.position_y, data);
-    }
-    printf("----------------------------------------------------\n");
-    printf("Player map position After move: p_pos_x = %d, p_pos_y = %d\n", data->p_pos_x, data->p_pos_y);
-    printf("Player Pixel position After move: p_pos_x = %d, p_pos_y = %d\n", data->player.position_x, data->player.position_y);
 }
 
 int handle_key(int keycode, t_data *data)
@@ -148,9 +198,6 @@ int handle_key(int keycode, t_data *data)
         go_right(data);
 	}
 	mlx_clear_window(data->window->mlx_ptr, data->window->mlx_window);
-    // print_struct(data);
-	// draw_map(data);
-
     i = 0;
 	while (data->map[i])
 	{
@@ -170,57 +217,9 @@ int handle_key(int keycode, t_data *data)
     return (0);
 }
 
-
-/////////////////////////////////////////////////////////////////////////////////////////////////
-
-// void draw_grid(char c, int i, int j, t_data *data)
-// {
-//     size_t	color;
-//     int		x;
-// 	int 	y;
-	
-//     if (c == '0')
-// 		color = 0xFFFFFF;
-//     else if (c == '1')
-// 		color = 0x00008B;
-//     else
-// 	{
-// 		color = 0x000000;
-// 	}
-// 	if (c != '1' && c!= '0')
-// 		draw_player(i, j, data);
-// 	else
-// 	{
-// 		y = i * data->window->cell_height;
-// 		while (y < (i + 1) * data->window->cell_height && y < Window_height)
-// 		{
-// 			x = j * data->window->cell_width;
-// 			while (x < (j + 1) * data->window->cell_width && x < Window_width)
-// 			{
-// 				my_mlx_pixel_put(data, x, y, color);
-// 				x++;
-// 			}
-// 			y++;
-// 		}
-// 	}
-// }
-
-
-// void draw_map(t_data *data)
-// {
-// 	int		i;
-// 	int		j;
-
-// 	i = 0;
-// 	data->map_width = find_max_row_length(data);
-// 	while (data->map[i])
-// 	{
-// 		j = 0;
-// 		while (data->map[i][j])
-// 		{
-// 			draw_grid(data->map[i][j], i , j , data);
-// 			j++;
-// 		}
-// 		i++;
-// 	}
-// }
+// check
+	// printf("Player map position before move: M_pos_x = %d, M_pos_y = %d\n", data->p_pos_x, data->p_pos_y);
+	// printf("Player Pixel position before move: p_pos_x = %d, p_pos_y = %d\n", data->player.position_x, data->player.position_y);
+    // printf("result of counting ==== %d\n", (data->p_pos_x * data->window->cell_height));
+    // printf("color ===== %d\n", get_pixel_color(data, data->player.position_x - data->player.width , data->player.position_y));
+    // printf("player color ===== %d\n", get_pixel_color(data, data->player.position_x, data->player.position_y));
