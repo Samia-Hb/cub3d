@@ -6,7 +6,7 @@
 /*   By: shebaz <shebaz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/04 13:49:36 by shebaz            #+#    #+#             */
-/*   Updated: 2025/02/18 17:56:34 by shebaz           ###   ########.fr       */
+/*   Updated: 2025/02/22 11:35:38 by shebaz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -160,7 +160,6 @@ void draw_grid(char c, int i, int j, t_data *data)
 	}
 }
 
-
 void draw_map(t_data *data)
 {
 	int		i;
@@ -180,91 +179,6 @@ void draw_map(t_data *data)
 	}
 }
 
-// void update_player_pos(int x, int y, t_data *data)
-// {
-// 	int i;
-// 	int j;
-
-// 	i = 0;
-// 	while (i < data->player.height)
-// 	{
-// 		j = 0;
-// 		while (j < data->player.width)
-// 		{
-// 			my_mlx_pixel_put(data, x + i, y + j, 0);
-// 			j++;
-// 		}
-// 		i++;
-// 	}
-// 	data->player.position_x = x;
-// 	data->player.position_y = y;
-// }
-
-// void go_up(t_data *data)
-// {
-// 	// if (data->player.position_x < 0)
-// 	// {
-// 	// 	data->map[data->p_pos_x][data->p_pos_y] = '0';
-// 	// 	data->map[data->p_pos_x - 1][data->p_pos_y] = data->p_orientation;
-// 	// 	data->p_pos_x -= 1;
-// 	// }
-// 	if (data->map[data->p_pos_x][data->p_pos_y] == data->p_orientation && get_pixel_color(data, data->player.position_x - 1, data->player.position_y) != 0x00008B)
-// 	{
-// 		draw_grid('0', data->p_pos_x, data->p_pos_y, data);
-// 		update_player_pos(data->player.position_x - 1,data->player.position_y, data);
-// 	}
-// }
-
-// void go_right(t_data *data)
-// {
-// 	// if (data->player.position_y >= cell_width)
-// 	// {
-// 	// 	data->map[data->p_pos_x][data->p_pos_y] = '0';
-// 	// 	data->map[data->p_pos_x - 1][data->p_pos_y] = data->p_orientation;
-// 	// 	data->p_pos_x -= 1;
-// 	// }
-// 	if (data->map[data->p_pos_x][data->p_pos_y] == data->p_orientation && get_pixel_color(data, data->player.position_x, data->player.position_y + 1) != 0x00008B)
-// 	{
-// 		draw_grid('0', data->p_pos_x, data->p_pos_y, data);
-// 		update_player_pos(data->player.position_x, data->player.position_y + 1, data);
-// 	}
-// }
-
-
-// void go_left(t_data *data)
-// {
-// 	// if (data->player.position_y < 0)
-// 	// {
-// 	// 	data->map[data->p_pos_x][data->p_pos_y] = '0';
-// 	// 	data->map[data->p_pos_x][data->p_pos_y - 1] = data->p_orientation;
-// 	// 	data->p_pos_y -= 1;
-// 	// }
-// 	if (data->map[data->p_pos_x][data->p_pos_y] == data->p_orientation && get_pixel_color(data, data->player.position_x, data->player.position_y - 1) != 0x00008B)
-// 	{
-// 		draw_grid('0', data->p_pos_x, data->p_pos_y, data);
-// 		update_player_pos(data->player.position_x ,data->player.position_y - 1, data);
-// 	}
-// }
-
-// void go_down(t_data *data)
-// {
-// 	printf("Player map position before move: p_pos_x = %d, p_pos_y = %d\n", data->p_pos_x, data->p_pos_y);
-// 	printf("Player Pixel position before move: p_pos_x = %d, p_pos_y = %d\n", data->player.position_x, data->player.position_y);
-// 	if (data->player.position_y >= (data->p_pos_x * cell_height + cell_height))
-// 	{
-// 		data->map[data->p_pos_x][data->p_pos_y] = '0';
-// 		data->map[data->p_pos_x + 1][data->p_pos_y] = data->p_orientation;
-// 		data->p_pos_x += 1;
-// 	}
-// 	if (data->map[data->p_pos_x][data->p_pos_y] == data->p_orientation && get_pixel_color(data, data->player.position_x, data->player.position_y + 1) != 0x00008B)
-// 	{
-// 		draw_grid('0', data->p_pos_x, data->p_pos_y, data);
-// 		update_player_pos(data->player.position_x , data->player.position_y + 1, data);
-// 	}
-// 	// printf("Player map position After move: p_pos_x = %d, p_pos_y = %d\n", data->p_pos_x, data->p_pos_y);
-// 	// printf("Player Pixel position After move: p_pos_x = %d, p_pos_y = %d\n", data->player.position_x, data->player.position_y);
-// }
-
 void execution(t_data *data)
 {
 	data->map_width = find_max_row_length(data);
@@ -275,6 +189,7 @@ void execution(t_data *data)
 	draw_map(data);
 	mlx_put_image_to_window(data->window->mlx_ptr, data->window->mlx_window, data->window->img_ptr, 0, 0);
     mlx_hook(data->window->mlx_window, 2, 1L << 0, handle_key, data);
+	raycasting(data);
     mlx_loop(data->window->mlx_ptr);
 }
 
@@ -288,7 +203,7 @@ int	main(int argc, char **argv)
 		ft_putstr_fd("Invalid Number Of Argument\n", 2);
 		return (1);
 	}
-	fd = open(argv[1], O_CREAT | O_RDWR, 0777);
+	fd = open(argv[1], O_RDWR, 0777);
 	if (fd == -1)
 		print_error();
 	data = malloc(sizeof(t_data));

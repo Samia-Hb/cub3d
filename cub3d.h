@@ -6,7 +6,7 @@
 /*   By: shebaz <shebaz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/08 23:12:50 by shebaz            #+#    #+#             */
-/*   Updated: 2025/02/18 21:29:45 by shebaz           ###   ########.fr       */
+/*   Updated: 2025/02/22 16:32:58 by shebaz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,7 @@
 # include <sys/types.h>
 # include <sys/wait.h>
 # include <unistd.h>
+# include <math.h>
 
 # define W 87
 # define A 65
@@ -98,6 +99,15 @@ typedef struct helper
 
 }					t_helper;
 
+typedef struct cast
+{
+    t_data	*data;
+    int		dir;
+    int		fov;
+    int		start_angle;
+    int		end_angle;
+}t_casting;
+
 t_data				*map_parsing(t_data *data, int fd);
 int					another_content(char *str);
 void				initiale_data(t_data *data);
@@ -121,4 +131,5 @@ void				my_mlx_pixel_put(t_data *data, int x, int y, int color);
 void				draw_map(t_data *data);
 void				print_struct(t_data *data);
 int					get_pixel_color(t_data *data, int x, int y);
+void raycasting(t_data *data);
 #endif
